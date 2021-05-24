@@ -119,6 +119,27 @@ class TemperatureSensors extends clsModel {
         $sensors = TemperatureSensors::GetInstance();
         return $sensors->LoadAll();
     }
+    public static function LoadRoomSensors($room_id){
+        $sensors = TemperatureSensors::GetInstance();
+        return $sensors->LoadAllWhere(['room_id'=>$room_id]);
+    }
+    public static function SaveSensor($data){
+        $sensors = TemperatureSensors::GetInstance();
+        if(is_null($sensors->LoadWhere(['id'=>$data['id']]))){
+            return $sensors->Save($data);
+        }
+        return $sensors->Save($data,['id'=>$data['id']]);
+
+    }
+    public static function SaveRemoteSensor($data){
+        $sensors = TemperatureSensors::GetInstance();
+        $data = $sensors->CleanDataSkipId($data);
+        $sensor = $sensors->LoadWhere(['remote_id'=>$data['remote_id'],'mac_address'=>$data['mac_address']]);
+        if(is_null($sensor)){
+            return $sensors->Save($data);
+        }
+        return $sensors->Save($data,['remote_id'=>$data['remote_id'],'mac_address'=>$data['mac_address']]);
+    }
 }
 if(defined('VALIDATE_TABLES')){
     clsModel::$models[] = new TemperatureSensors();
