@@ -4,7 +4,7 @@
 ## clone repo
 
 ```bash
-cd \var\www\html\plugins
+cd /var/www/html/plugins
 ```
 
 ```bash
