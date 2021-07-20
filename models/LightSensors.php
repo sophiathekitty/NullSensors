@@ -1,4 +1,5 @@
 <?php
+define('SensorsPlugin',true);
 
 class LightSensors extends clsModel {
     public $table_name = "LightSensors";

@@ -32,6 +32,13 @@ class TemperatureSensors extends clsModel {
             'Default'=>"0",
             'Extra'=>""
         ],[
+            'Field'=>"name",
+            'Type'=>"varchar(100)",
+            'Null'=>"NO",
+            'Key'=>"",
+            'Default'=>"0",
+            'Extra'=>""
+        ],[
             'Field'=>"log_delay",
             'Type'=>"int(11)",
             'Null'=>"NO",
@@ -103,7 +110,7 @@ class TemperatureSensors extends clsModel {
             'Extra'=>""
         ],[
             'Field'=>"error",
-            'Type'=>"varchar(11)",
+            'Type'=>"varchar(100)",
             'Null'=>"NO",
             'Key'=>"",
             'Default'=>"Ok",
@@ -138,7 +145,9 @@ class TemperatureSensors extends clsModel {
         if(is_null($sensor)){
             return $sensors->Save($data);
         }
+        //print_r($data);
         return $sensors->Save($data,['remote_id'=>$data['remote_id'],'mac_address'=>$data['mac_address']]);
+        //print_r($r);
     }
 }
 if(defined('VALIDATE_TABLES')){
