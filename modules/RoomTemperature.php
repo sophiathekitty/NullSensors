@@ -23,7 +23,7 @@ function RoomTemperature(){
         'temp' => (float)round($temp/count($sensors),2),
         'temp_max' => (float)$temp_max,
         'temp_min' => (float)$temp_min,
-        'hum' => (float)round($temp/count($sensors),2),
+        'hum' => (float)round($hum/count($sensors),2),
         'hum_max' => (float)$hum_max,
         'hum_min' => (float)$hum_min
     ];

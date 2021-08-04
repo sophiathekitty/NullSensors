@@ -126,6 +126,10 @@ class TemperatureSensors extends clsModel {
         $sensors = TemperatureSensors::GetInstance();
         return $sensors->LoadAll();
     }
+    public static function LoadWorkingSensors(){
+        $sensors = TemperatureSensors::GetInstance();
+        return $sensors->LoadAllWhere(["error"=>"ok"]);
+    }
     public static function LoadRoomSensors($room_id){
         $sensors = TemperatureSensors::GetInstance();
         return $sensors->LoadAllWhere(['room_id'=>$room_id]);
