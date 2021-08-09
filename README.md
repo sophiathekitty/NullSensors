@@ -4,7 +4,7 @@ a plugin i'm making for my null hub stuff to handle sensors running on an arduin
 
 ## setup pi stuff for sensors on pi gpio
 
-i'm still working on this... i think these are all the commands i used to install all the stuff i needed. i don't know if these include extras i don't really nead. as of writing this i only have tested with a dht11 sensor
+i'm still working on this... i think these are all the commands i used to install all the stuff i needed. i don't know if these include extras i don't really nead. as of writing this i only have tested with a dht11 sensor. i used this [tutorial](https://peppe8o.com/using-raspberry-pi-with-dht11-temperature-and-humidity-sensor-and-python/#:~:text=Step-by-Step%20Procedure%201%20Wiring%20Diagram.%20Note%20that%20DHT11,Install%20Python%20Libraries.%20...%205%20Setup%20CircuitPython-DHT.%20). and this might help with the [pinout](https://pinout.xyz/pinout/pin11_gpio17). i have it working wired to gpio 17 (sixth pin from top on left)
 
 ### Individual commands
 
