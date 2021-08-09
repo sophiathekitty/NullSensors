@@ -22,11 +22,25 @@ class TemperatureSensors extends clsModel {
             'Type'=>"int(11)",
             'Null'=>"NO",
             'Key'=>"",
-            'Default'=>"",
-            'Extra'=>"0"
+            'Default'=>"0",
+            'Extra'=>""
         ],[
             'Field'=>"room_id",
             'Type'=>"int(11)",
+            'Null'=>"NO",
+            'Key'=>"",
+            'Default'=>"0",
+            'Extra'=>""
+        ],[
+            'Field'=>"gpio",
+            'Type'=>"int(11)",
+            'Null'=>"NO",
+            'Key'=>"",
+            'Default'=>"0",
+            'Extra'=>""
+        ],[
+            'Field'=>"serial",
+            'Type'=>"tinyint(1)",
             'Null'=>"NO",
             'Key'=>"",
             'Default'=>"0",
@@ -122,6 +136,14 @@ class TemperatureSensors extends clsModel {
         if(is_null(TemperatureSensors::$sensors)) TemperatureSensors::$sensors = new TemperatureSensors();
         return TemperatureSensors::$sensors;
     }
+    public static function LoadSensorId($sensor_id){
+        $sensors = TemperatureSensors::GetInstance();
+        return $sensors->LoadWhere(['id'=>$sensor_id]);
+    }
+    public static function LoadLocalSensor($gpio){
+        $sensors = TemperatureSensors::GetInstance();
+        return $sensors->LoadWhere(['gpio'=>$gpio,'mac_address'=>LocalMac()]);
+    }
     public static function LoadSensors(){
         $sensors = TemperatureSensors::GetInstance();
         return $sensors->LoadAll();
@@ -130,13 +152,25 @@ class TemperatureSensors extends clsModel {
         $sensors = TemperatureSensors::GetInstance();
         return $sensors->LoadAllWhere(["error"=>"ok"]);
     }
+    public static function LoadLocalSensors(){
+        $sensors = TemperatureSensors::GetInstance();
+        return $sensors->LoadAllWhere(["mac_address"=>LocalMac()]);
+    }
+    public static function LoadLocalPiSensors(){
+        $sensors = TemperatureSensors::GetInstance();
+        return $sensors->LoadAllWhere(["serial"=>"0","mac_address"=>LocalMac()]);
+    }
+    public static function LoadLocalArduinoSensors(){
+        $sensors = TemperatureSensors::GetInstance();
+        return $sensors->LoadAllWhere(["serial"=>"1","mac_address"=>LocalMac()]);
+    }
     public static function LoadRoomSensors($room_id){
         $sensors = TemperatureSensors::GetInstance();
         return $sensors->LoadAllWhere(['room_id'=>$room_id]);
     }
     public static function SaveSensor($data){
         $sensors = TemperatureSensors::GetInstance();
-        if(is_null($sensors->LoadWhere(['id'=>$data['id']]))){
+        if(!isset($data['id']) || is_null($sensors->LoadWhere(['id'=>$data['id']]))){
             return $sensors->Save($data);
         }
         return $sensors->Save($data,['id'=>$data['id']]);
