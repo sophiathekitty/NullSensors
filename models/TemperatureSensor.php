@@ -170,7 +170,7 @@ class TemperatureSensors extends clsModel {
     }
     public static function SaveSensor($data){
         $sensors = TemperatureSensors::GetInstance();
-        $data = $sensors->CleanData();
+        $data = $sensors->CleanData($data);
         if(!isset($data['id']) || is_null($sensors->LoadWhere(['id'=>$data['id']]))){
             return $sensors->Save($data);
         }
