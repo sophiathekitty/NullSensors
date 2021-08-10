@@ -20,6 +20,7 @@ while True:
         with urllib.request.urlopen("http://localhost/plugins/NullSensors/api/temperature?gpio=17&temperature={}&humidity={}".format(temperature_f,humidity)) as json_url:
             buf = json_url.read()
             data = json.loads(buf.decode('utf-8'))
+            print(buf.decode('utf-8'))
     except RuntimeError as error:     # Errors happen fairly often, DHT's are hard to read, just keep going
         print(error.args[0])
         error_count = error_count + 1

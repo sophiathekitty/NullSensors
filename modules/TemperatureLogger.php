@@ -2,7 +2,7 @@
 class TemperatureLogger{
     public static function RecordTemperature($gpio,$temperature,$humidity){
         $sensor = TemperatureSensors::LoadLocalSensor($gpio);
-        //print_r($sensor);
+        print_r($sensor);
         $new = false;
         if(is_null($sensor)){
             // is new
@@ -15,14 +15,14 @@ class TemperatureLogger{
         $sensor['temp'] = $temperature;
         $sensor['hum'] = $humidity;
         if($new){
-            //echo "new";
+            echo "new";
             $sensor['hum_max'] = $humidity;
             $sensor['hum_min'] = $humidity;
             $sensor['temp_max'] = $temperature;
             $sensor['temp_min'] = $temperature;
-            //TemperatureLog::LogSensor($sensor);
+            TemperatureLog::LogSensor($sensor);
         } else {
-            //echo "not new";
+            echo "not new";
             $sensor['remote_id'] = $sensor['id'];
             if($sensor['hum_max'] < $humidity) $sensor['hum_max'] = $humidity;
             if($sensor['hum_min'] > $humidity) $sensor['hum_min'] = $humidity;
@@ -43,6 +43,7 @@ class TemperatureLogger{
                 }
             }
         }
+        print_r($sensor);
         TemperatureSensors::SaveSensor($sensor);
     }
     public static function RecordError($gpio,$error){
