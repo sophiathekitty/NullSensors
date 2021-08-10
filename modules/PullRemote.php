@@ -36,7 +36,7 @@ class PullRemoteSensors {
         $error = "";
         foreach($data['temperature'] as $temperature){
             // save temperature sensor
-            if(isset($temperature['mac_address'])){
+            if(isset($temperature['mac_address']) && $temperature['mac_address'] != LocalMac()){
                 TemperatureSensors::SaveRemoteSensor($temperature);
                 $error .= clsDB::$db_g->get_err();
             }
