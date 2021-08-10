@@ -9,6 +9,8 @@ class TemperatureLogger{
             $new = true;
             $sensor = ['gpio'=>$gpio,'mac_address'=>LocalMac(),'log_delay'=>60];
         }
+        $temperature = round($temperature,1);
+        $humidity = round($humidity,1);
         $sensor['error'] = "ok";
         $sensor['temp'] = $temperature;
         $sensor['hum'] = $humidity;
