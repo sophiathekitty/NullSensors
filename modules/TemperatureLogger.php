@@ -49,5 +49,15 @@ class TemperatureLogger{
         $sensor['error'] = $error;
         TemperatureSensors::SaveSensor($sensor);
     }
+    public static function DoLog($sensor){
+        print_r($sensor);
+        $log = TemperatureLog::LatestLog($sensor['id']);
+        print_r($log);
+        if(is_null($log) || (strtotime($log['created']) + $sensor['log_delay']) < time()){
+            echo "do log";
+        } else {
+            echo "never mind";
+        }
+    }
 }
 ?>
