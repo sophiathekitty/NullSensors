@@ -27,10 +27,10 @@ class TemperatureLogger{
             if($sensor['temp_max'] < $temperature) $sensor['temp_max'] = $temperature;
             if($sensor['temp_min'] > $temperature) $sensor['temp_min'] = $temperature;
             $log = TemperatureLog::LatestLog($sensor['id']);
-            if(is_null($log) || strtotime($log['created']) + $sensor['log_delay'] < time()){
+            if(is_null($log) || (strtotime($log['created']) + $sensor['log_delay']) < time()){
                 // time for new log
                 $sensor['sensor_id'] = $sensor['id'];
-                
+
                 TemperatureLog::LogSensor($sensor);
                 // if we're logging the min and max should get reset (but only if log exists)
                 if(!is_null($log)){
