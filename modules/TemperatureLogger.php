@@ -2,7 +2,7 @@
 class TemperatureLogger{
     public static function RecordTemperature($gpio,$temperature,$humidity){
         $sensor = TemperatureSensors::LoadLocalSensor($gpio);
-        print_r($sensor);
+        //print_r($sensor);
         $new = false;
         if(is_null($sensor)){
             // is new
@@ -13,26 +13,26 @@ class TemperatureLogger{
         $sensor['temp'] = $temperature;
         $sensor['hum'] = $humidity;
         if($new){
-            echo "new";
+            //echo "new";
             $sensor['hum_max'] = $humidity;
             $sensor['hum_min'] = $humidity;
             $sensor['temp_max'] = $temperature;
             $sensor['temp_min'] = $temperature;
             //TemperatureLog::LogSensor($sensor);
         } else {
-            echo "not new";
+            //echo "not new";
             $sensor['remote_id'] = $sensor['id'];
             if($sensor['hum_max'] < $humidity) $sensor['hum_max'] = $humidity;
-            if($sensor['hum_min'] < $humidity) $sensor['hum_min'] = $humidity;
+            if($sensor['hum_min'] > $humidity) $sensor['hum_min'] = $humidity;
             if($sensor['temp_max'] < $temperature) $sensor['temp_max'] = $temperature;
-            if($sensor['temp_min'] < $temperature) $sensor['temp_min'] = $temperature;
+            if($sensor['temp_min'] > $temperature) $sensor['temp_min'] = $temperature;
             $log = TemperatureLog::LatestLog($sensor['id']);
             if(is_null($log) || strtotime($log['created']) + $sensor['log_delay'] < time()){
                 // time for new log
                 $sensor['sensor_id'] = $sensor['id'];
-
+                
                 TemperatureLog::LogSensor($sensor);
-                // if we're logging the min and max should get reset
+                // if we're logging the min and max should get reset (but only if log exists)
                 if(!is_null($log)){
                     $sensor['hum_max'] = $humidity;
                     $sensor['hum_min'] = $humidity;
