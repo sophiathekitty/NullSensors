@@ -12,6 +12,7 @@ class TemperatureLogger{
         $temperature = round($temperature,1);
         $humidity = round($humidity,1);
         $sensor['error'] = "ok";
+        $sensor['modified'] = date("Y-m-d H:i:s");
         $sensor['temp'] = $temperature;
         $sensor['hum'] = $humidity;
         if($new){
