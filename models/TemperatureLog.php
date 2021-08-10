@@ -83,7 +83,6 @@ class TemperatureLog extends clsModel {
     }
     public static function LatestLog($sensor_id){
         $sensors = TemperatureLog::GetInstance();
-        $sensors = new clsModel();
         return $sensors->LoadWhere(["sensor_id"=>$sensor_id],['created'=>"DESC"]);
     }
     public static function LoadLogs($sensor_id){
