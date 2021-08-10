@@ -77,7 +77,7 @@ class TemperatureLog extends clsModel {
         $sensors = TemperatureLog::GetInstance();
         $sensor = TemperatureSensors::LoadSensorId($data['sensor_id']);
         $sensors->PruneField('created',DaysToSeconds($sensor['keep_time']));
-        $sensors->CleanDataSkipFields($data,['id']);
+        $data = $sensors->CleanDataSkipFields($data,['id']);
         return $sensors->Save($data);
     }
     public static function LatestLog($sensor_id){
