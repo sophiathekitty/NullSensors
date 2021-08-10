@@ -31,7 +31,7 @@ class TemperatureLogger{
                 // time for new log
                 $sensor['sensor_id'] = $sensor['id'];
 
-                TemperatureLog::LogSensor($sensor);
+                //TemperatureLog::LogSensor($sensor);
                 // if we're logging the min and max should get reset (but only if log exists)
                 if(!is_null($log)){
                     $sensor['hum_max'] = $humidity;
