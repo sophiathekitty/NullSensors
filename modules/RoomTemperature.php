@@ -1,6 +1,9 @@
 <?php
 function RoomTemperature(){
-    $sensors = TemperatureSensors::LoadRoomSensors(Settings::LoadSettingsVar('room_id'));
+    RoomCurrentTemperature(Settings::LoadSettingsVar('room_id'));
+}
+function RoomCurrentTemperature($room_id){
+    $sensors = TemperatureSensors::LoadRoomSensors($room_id);
     
     $temp = 0;
     $temp_max = 0;
