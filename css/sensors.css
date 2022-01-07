@@ -1,0 +1,7 @@
+section#floors .room.card h1 .sensors [type="temperature"] {
+    text-shadow: #00000066 0.1em 0.1em 0.1em;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;
+    margin-left: 0.25em;
+    transform: translateY(-0.15em);
+}
