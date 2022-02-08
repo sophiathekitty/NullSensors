@@ -1,6 +1,7 @@
 class TemperatureSensorCollection extends Collection {
     static instance = new TemperatureSensorCollection();
-    constructor(){
+    static debug_temperature = false;
+    constructor(debug = TemperatureSensorCollection.debug_temperature){
         super("temperature","temperature","/plugins/NullSensors/api/temperature","/plugins/NullSensors/api/temperature");
     }
     /**

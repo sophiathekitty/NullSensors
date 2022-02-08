@@ -1,5 +1,5 @@
 class TemperatureSensorList extends View {
-    constructor(debug = false){
+    constructor(debug = TemperatureSensorCollection.debug_temperature){
         super(TemperatureSensorCollection.instance,null,new Template("dht11_item","/plugins/NullSensors/templates/items/dht11.html"),90000,debug);
     }
     build(){

@@ -1,5 +1,5 @@
 class TemperatureBug extends View {
-    constructor(debug = true){
+    constructor(debug = TemperatureSensorCollection.debug_temperature){
         super(new TemperatureSensorCollection(),null, new Template("temp_bug","/plugins/NullSensors/templates/bugs/temperature.html"),60000, debug);
         this.pallet = ColorPallet.getPallet("weather");
     }
@@ -37,7 +37,7 @@ class TemperatureBug extends View {
                     count++;
                     if(this.debug) console.log("TemperatureBug::Display",room_id,"foreach",temp,sensor.temp);
                 });
-                console.log("TempBug::Display",temp,count,Math.round(temp/count))
+                if(this.debug) console.log("TempBug::Display",temp,count,Math.round(temp/count))
                 temp = Math.round(temp/count);
                 if(this.debug) console.log("TemperatureBug::Display",room_id,"temp",temp);
                 $("[room_id="+room_id+"] .sensors [var=temp]").html(temp);
