@@ -2,7 +2,7 @@
 class PullRemoteSensors {
     /**
      * pull remote sensors from the main hub or the actual devices if this is the main hub
-     * @not_implemented pulling from source devices as main hub not implemented
+     * @todo pulling from source devices as main hub not implemented
      * @return null|string returns a string of any database errors that occurred
      */
     public static function Sync(){
@@ -39,6 +39,8 @@ class PullRemoteSensors {
             if(isset($temperature['mac_address']) && $temperature['mac_address'] != LocalMac()){
                 TemperatureSensors::SaveRemoteSensor($temperature);
                 $error .= clsDB::$db_g->get_err();
+                $temperature['sensor_id'] = $temperature['id'];
+                TemperatureLog::LogSensor($temperature);
             }
         }
         return $error;
