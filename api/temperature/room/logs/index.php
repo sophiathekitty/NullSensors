@@ -4,7 +4,7 @@ $data = [];
 if(isset($_GET['room_id'])){
     $data['temperature'] = TemperatureChart::Room($_GET['room_id']);
 } else {
-    $data['temperature'] = TemperatureChart::Indoors();
+    $data['rooms'] = TemperatureChart::AllRooms();
 }
 OutputJson($data);
 ?>

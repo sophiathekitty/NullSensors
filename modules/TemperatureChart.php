@@ -28,6 +28,25 @@ class TemperatureChart extends HourlyChart {
      * generates a indoors hourly chart
      * @return array returns an array containing an hourly temperature chart
      */
+    public static function AllRooms(){
+        $data = [];
+        $sensors = TemperatureSensors::LoadSensors();
+        $rooms = [];
+        foreach($sensors as $sensor){
+            if(!isset($rooms[$sensor['room_id']])) $rooms[$sensor['room_id']] = (int)$sensor['room_id'];
+        }
+        foreach($rooms as $room_id){
+            $chart = [];
+            $chart['room_id'] = $room_id;
+            $chart['temperature'] = TemperatureChart::Room($room_id);
+            $data[] = $chart;
+        }
+        return $data;
+    }
+    /**
+     * generates a indoors hourly chart
+     * @return array returns an array containing an hourly temperature chart
+     */
     public static function Room($room_id){
         $chart = TemperatureChart::GetInstance();
         $data = [];
