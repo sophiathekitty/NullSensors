@@ -3,6 +3,7 @@ class TemperatureBug extends View {
         super(new TemperatureSensorCollection(),null, new Template("temp_bug","/plugins/NullSensors/templates/bugs/temperature.html"),60000, debug);
         this.pallet = ColorPallet.getPallet("weather");
         this.pixelChart = new TemperaturePixelChart();
+        this.barChart = new TemperatureBarChart();
     }
     build(){
         if(this.debug) console.warn("TemperatureBug::Build","missing room id");
@@ -26,6 +27,7 @@ class TemperatureBug extends View {
             });    
         });
         if(this.pixelChart) this.pixelChart.build(room_id);
+        if(this.barChart) this.barChart.build(room_id);
     }
     display(room_id){
         if(this.debug) console.log("TemperatureBug::Display",room_id);
@@ -53,6 +55,7 @@ class TemperatureBug extends View {
             }
         });
         if(this.pixelChart) this.pixelChart.display(room_id);
+        if(this.barChart) this.barChart.display(room_id);
     }
     refresh(room_id){
         if(this.debug) console.log("TemperatureBug::Refresh",room_id);

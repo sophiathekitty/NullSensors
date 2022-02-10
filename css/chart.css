@@ -1,18 +1,33 @@
 .charts .temp_chart {
     position: relative;
-}
-.charts .temp_chart.simple {
     display: flex;
     flex-direction: row !important;
-    height: 1em;
     width: 100%;
 }
-.charts .temp_chart.simple .hour {
+.charts .temp_chart.simple {
+    height: 1em;
+}
+section#floors div.charts div.temp_chart.bar {
+    display: none;
+    height: 6em;
+}
+.charts .temp_chart .hour {
     border-left: #000 thin solid;
     flex-grow: 1;
     margin: 0em;
+    position: relative;
 }
 .charts .time_bar,
 .charts .hour {
     width: auto !important;
+}
+.charts .hour [var="temp"] {
+    position: absolute;
+}
+section#floors[room_id][level] .charts .temp_chart.simple {
+    display: none;
+}
+section#floors[room_id][level] .charts .temp_chart.bar {
+    display: flex;
+    height: 30vh;
 }

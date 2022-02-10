@@ -1,19 +1,19 @@
-class TemperaturePixelChart extends View {
+class TemperatureBarChart extends View {
     constructor(debug = IndoorTemperatureHourlyChart.debug_temperature){
         super(IndoorTemperatureHourlyChart.instance,
-            new Template("dht11_item","/plugins/NullSensors/templates/charts/pixel.html"),
+            new Template("dht11_item","/plugins/NullSensors/templates/charts/bar.html"),
             null,
             90000,debug);
             this.pallet = ColorPallet.getPallet("weather");
     }
     build(){
-        if(this.debug) console.warn("TemperaturePixelChart::Build","missing room id");
+        if(this.debug) console.warn("TemperatureBarChart::Build","missing room id");
     }
     refresh(){
-        if(this.debug) console.warn("TemperaturePixelChart::Refresh","missing room id");
+        if(this.debug) console.warn("TemperatureBarChart::Refresh","missing room id");
     }
     display(){
-        if(this.debug) console.warn("TemperaturePixelChart::Display","missing room id");
+        if(this.debug) console.warn("TemperatureBarChart::Display","missing room id");
     }
     build(room_id){
         if(this.template){
@@ -30,6 +30,7 @@ class TemperaturePixelChart extends View {
     }
     display(room_id){
         if(this.model){
+            this.mapper = new ReMapper(-10,120);
             this.model.room(room_id,json=>{
                 json.temperature.forEach(hour=>{
                     this.pallet.getColorLerp("temp",hour.temp,color=>{
@@ -45,8 +46,10 @@ class TemperaturePixelChart extends View {
                         if(hours == 0){
                             hours = 12;
                         }
-                        $("[room_id="+room_id+"] .temp_chart.simple [hour="+hour.hour+"]").css("background-color",color);
-                        $("[room_id="+room_id+"] .temp_chart.simple [hour="+hour.hour+"]").attr("title","Indoors -- "+hours+am+"\nTemp: "+Math.round(hour.temp)+"° | "+Math.round(hour.temp_max)+"° / "+Math.round(hour.temp_min)+"°\nHum: "+Math.round(hour.hum)+"% | "+Math.round(hour.hum_max)+"% / "+Math.round(hour.hum_min)+"%");
+                        $("[room_id="+room_id+"] .temp_chart [hour="+hour.hour+"] [var=temp]").css("top",this.mapper.max_mapper(hour.temp_max+1)+"%");
+                        $("[room_id="+room_id+"] .temp_chart [hour="+hour.hour+"] [var=temp]").css("bottom",this.mapper.min_mapper(hour.temp_min-1)+"%");
+                        $("[room_id="+room_id+"] .temp_chart [hour="+hour.hour+"] [var=temp]").css("background-color",color);
+                        $("[room_id="+room_id+"] .temp_chart [hour="+hour.hour+"] [var=temp]").attr("title","Indoors -- "+hours+am+"\nTemp: "+Math.round(hour.temp)+"° | "+Math.round(hour.temp_max)+"° / "+Math.round(hour.temp_min)+"°\nHum: "+Math.round(hour.hum)+"% | "+Math.round(hour.hum_max)+"% / "+Math.round(hour.hum_min)+"%");
                     });
 
                 });
