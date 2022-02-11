@@ -1,6 +1,9 @@
+/**
+ * loads the hourly weather chart for the average indoors and individual rooms
+ */
 class IndoorTemperatureHourlyChart extends HourlyChart {
     static instance = new IndoorTemperatureHourlyChart();
-    static debug_temperature = true;
+    static debug_temperature = false;
     constructor(debug = IndoorTemperatureHourlyChart.debug_temperature){
         super("temperature_logs","temperature","temperature_chart","/plugins/NullSensors/api/temperature/logs",debug);
     }
@@ -17,5 +20,13 @@ class IndoorTemperatureHourlyChart extends HourlyChart {
                 }
             });
         });
+    }
+}
+/**
+ * loads the average indoor temperature and humidity
+ */
+class IndoorTemperatureModel extends Model {
+    constructor(debug = false){
+        super("indoors","/plugins/NullSensors/api/temperature/indoors","/plugins/NullSensors/api/temperature/indoors",300000,"model_", debug);
     }
 }
