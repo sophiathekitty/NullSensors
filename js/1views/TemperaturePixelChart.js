@@ -45,8 +45,10 @@ class TemperaturePixelChart extends View {
                         if(hours == 0){
                             hours = 12;
                         }
-                        $("#indoors_weather_stamp .temp_chart.indoors.simple [hour="+hour.hour+"]").css("background-color",color);
-                        $("#indoors_weather_stamp .temp_chart.indoors.simple [hour="+hour.hour+"]").attr("title","Indoors -- "+hours+am+"\nTemp: "+Math.round(hour.temp)+"° | "+Math.round(hour.temp_max)+"° / "+Math.round(hour.temp_min)+"°\nHum: "+Math.round(hour.hum)+"% | "+Math.round(hour.hum_max)+"% / "+Math.round(hour.hum_min)+"%");
+                        //$("#indoors_weather_stamp .temp_chart.indoors.simple [hour="+hour.hour+"]").css("background-color",color);
+                        //$("#indoors_weather_stamp .temp_chart.indoors.simple [hour="+hour.hour+"]").attr("title","Indoors -- "+hours+am+"\nTemp: "+Math.round(hour.temp)+"° | "+Math.round(hour.temp_max)+"° / "+Math.round(hour.temp_min)+"°\nHum: "+Math.round(hour.hum)+"% | "+Math.round(hour.hum_max)+"% / "+Math.round(hour.hum_min)+"%");
+                        $(".clock .temp_chart.indoors.simple [hour="+hour.hour+"]").css("background-color",color);
+                        $(".clock .temp_chart.indoors.simple [hour="+hour.hour+"]").attr("title","Indoors -- "+hours+am+"\nTemp: "+Math.round(hour.temp)+"° | "+Math.round(hour.temp_max)+"° / "+Math.round(hour.temp_min)+"°\nHum: "+Math.round(hour.hum)+"% | "+Math.round(hour.hum_max)+"% / "+Math.round(hour.hum_min)+"%");
                     });
 
                 });
