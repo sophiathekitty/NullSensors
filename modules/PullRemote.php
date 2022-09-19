@@ -6,22 +6,30 @@ class PullRemoteSensors {
      * @return null|string returns a string of any database errors that occurred
      */
     public static function Sync(){
-        Settings::SaveSettingsVar("service::PullRemoteSensors",date("H:i:s"));
+        Services::Start("NullSensors::PullRemoteSensors");
+        //Settings::SaveSettingsVar("service::PullRemoteSensors",date("H:i:s"));
         if(Servers::IsHub()){
             // sync using sensor's mac address to get server address
+            Services::Log("NullSensors::PullRemoteSensors","Syncing as Hub not implimented");
+            Services::Complete("NullSensors::PullRemoteSensors");
             return null; // not implemented yet
         }
         // sync from the hub not the actual device
-        return PullRemoteSensors::SyncFromHub();
+        $res = PullRemoteSensors::SyncFromHub();
+        Services::Complete("NullSensors::PullRemoteSensors");
+        return $res;
     }
 
     private static function SyncFromHub(){
+        Services::Log("NullSensors::PullRemoteSensors","SyncingFromHub");
         $hub = Servers::GetHub();
         $error = "";
         $error .= PullRemoteSensors::SyncTemperatureFromHub($hub);
+        Services::Log("NullSensors::PullRemoteSensors","SyncingFromHub done... $error");
         return $error;
     }
     private static function SyncTemperatureFromHub($hub){
+        Services::Log("NullSensors::PullRemoteSensors","SyncTemperatureFromHub");
         if($hub['type'] == "old_hub")
             $url = "http://".$hub['url']."/api/temperature/?all=1";
         else {
@@ -32,7 +40,7 @@ class PullRemoteSensors {
         // load data
         $info = file_get_contents($url);
         $data = json_decode($info,true);
-        print_r($data);
+        Debug::Log("PullRemoteSensors::SyncTemperatureFromHub",$data);
         $error = "";
         foreach($data['temperature'] as $temperature){
             // save temperature sensor
