@@ -36,19 +36,31 @@ class TemperatureBug extends View {
             if(json.temperature.length > 0){
                 var temp = 0;
                 var count = 0;
+                var hum = 0;
+                var max_hum = 0;
+                var max_temp = 0;
+                var min_hum = 99999;
+                var min_temp = 99999;
                 json.temperature.forEach(sensor=>{
                     temp += Number(sensor.temp);
+                    hum += Number(sensor.hum);
+                    if(max_temp < Number(sensor.temp_max)) max_temp = Number(sensor.temp_max);
+                    if(max_hum < Number(sensor.hum_max)) max_hum = Number(sensor.hum_max);
+                    if(min_temp > Number(sensor.temp_min)) min_temp = Number(sensor.temp_min);
+                    if(min_hum > Number(sensor.hum_min)) min_hum = Number(sensor.hum_min);
                     count++;
                     if(this.debug) console.log("TemperatureBug::Display",room_id,"foreach",temp,sensor.temp);
                 });
                 if(this.debug) console.log("TempBug::Display",temp,count,Math.round(temp/count))
                 temp = Math.round(temp/count);
+                hum = Math.round(hum/count);
                 if(this.debug) console.log("TemperatureBug::Display",room_id,"temp",temp);
                 $("[room_id="+room_id+"] .sensors [var=temp]").html(temp);
                 $("[room_id="+room_id+"] .sensors [var=temp]").attr("unit","fahrenheit");
                 this.pallet.getColorLerp("temp",temp,color=>{
                     $("[room_id="+room_id+"] .sensors [var=temp]").css("color",color);
                 });
+                $("[room_id="+room_id+"] .sensors [var=temp]").attr("title","Temp: "+Math.round(temp)+"° | "+Math.round(max_temp)+"° / "+Math.round(min_temp)+"°\nHum: "+Math.round(hum)+"% | "+Math.round(max_hum)+"% / "+Math.round(min_hum)+"%");
 
             } else {
                 $("[room_id="+room_id+"] .sensors [var=temp]").attr("unit","e");
