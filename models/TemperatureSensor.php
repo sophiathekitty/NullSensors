@@ -132,7 +132,7 @@ class TemperatureSensors extends clsModel {
         ]
     ];
     private static $sensors = null;
-    private static function GetInstance(){
+    private static function GetInstance():TemperatureSensors{
         if(is_null(TemperatureSensors::$sensors)) TemperatureSensors::$sensors = new TemperatureSensors();
         return TemperatureSensors::$sensors;
     }
