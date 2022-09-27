@@ -2,7 +2,6 @@
 class PullRemoteSensors {
     /**
      * pull remote sensors from the main hub or the actual devices if this is the main hub
-     * @todo pulling from source devices as main hub not implemented
      * @return null|string returns a string of any database errors that occurred
      */
     public static function Sync(){
@@ -10,7 +9,6 @@ class PullRemoteSensors {
         //Settings::SaveSettingsVar("service::PullRemoteSensors",date("H:i:s"));
         if(Servers::IsHub() || defined("practice_sync_from_device")){
             // sync using sensor's mac address to get server address
-            Services::Log("NullSensors::PullRemoteSensors","Syncing as Hub not implimented");
             PullRemoteSensors::SyncFromDevice();
             Services::Complete("NullSensors::PullRemoteSensors");
             return null; // not implemented yet
@@ -20,9 +18,22 @@ class PullRemoteSensors {
         Services::Complete("NullSensors::PullRemoteSensors");
         return $res;
     }
-
+    /**
+     * sync from device
+     * @return string error messages if any
+     */
     private static function SyncFromDevice(){
         Services::Log("NullSensors::PullRemoteSensors","SyncingFromDevice");
+        $error = "";
+        $error .= PullRemoteSensors::SyncTemperatureFromDevice();
+        Services::Log("NullSensors::PullRemoteSensors","SyncingFromDevice done $error");
+        return $error;
+    }
+    /**
+     * sync temperature from device
+     * @return string error messages if any
+     */
+    private static function SyncTemperatureFromDevice(){
         $error = "";
         $sensors = TemperatureSensors::LoadSensors();
         $local_mac = LocalMac();
@@ -35,8 +46,8 @@ class PullRemoteSensors {
                 $data = ServerRequests::LoadRemoteJSON($sensor['mac_address'],$api);
                 
                 if($data && isset($data['garden'])){
-                    Services::Log("NullSensors::PullRemoteSensors","SyncingFromDevice::Garden Temp ".$data['garden']['current']['temp']['temp']);
-                    Debug::Log("NullSensors::PullRemoteSensors::SyncingFromDevice",$data);
+                    Services::Log("NullSensors::PullRemoteSensors","SyncTemperatureFromDevice::Garden Temp ".$data['garden']['current']['temp']['temp']);
+                    Debug::Log("NullSensors::PullRemoteSensors::SyncTemperatureFromDevice",$data);
                     
                     $sensor['temp'] = $data['garden']['current']['temp']['temp'];
                     $sensor['temp_max'] = $data['garden']['current']['temp']['max'];
@@ -54,8 +65,8 @@ class PullRemoteSensors {
                     $sensor['sensor_id'] = $sensor['id'];
                     TemperatureLog::LogSensor($sensor);
                 } else if($data && isset($data['sensor'])){
-                    Services::Log("NullSensors::PullRemoteSensors","SyncingFromDevice::Null Temp ".$data['sensor']['temp']);
-                    Debug::Log("NullSensors::PullRemoteSensors::SyncingFromDevice",$data);
+                    Services::Log("NullSensors::PullRemoteSensors","SyncTemperatureFromDevice::Null Temp ".$data['sensor']['temp']);
+                    Debug::Log("NullSensors::PullRemoteSensors::SyncTemperatureFromDevice",$data);
                     $sensor = ['id'=>$sensor['id']];
                     $sensor['temp'] = $data['sensor']['temp'];
                     $sensor['temp_max'] = $data['sensor']['temp_max'];
@@ -73,7 +84,7 @@ class PullRemoteSensors {
                     $sensor['sensor_id'] = $sensor['id'];
                     TemperatureLog::LogSensor($sensor);
                 } else {
-                    Services::Log("NullSensors::PullRemoteSensors","SyncingFromDevice::Offline");
+                    Services::Log("NullSensors::PullRemoteSensors","SyncTemperatureFromDevice::Offline");
                     $sensor = [];
                     $sensor['error'] = "Offline";
                     TemperatureSensors::SaveRemoteSensor($sensor);
@@ -82,6 +93,10 @@ class PullRemoteSensors {
         }
         return $error;
     }
+    /**
+     * sync from hub
+     * @return string error messages if any
+     */
     private static function SyncFromHub(){
         Services::Log("NullSensors::PullRemoteSensors","SyncingFromHub");
         $hub = Servers::GetHub();
@@ -90,6 +105,11 @@ class PullRemoteSensors {
         Services::Log("NullSensors::PullRemoteSensors","SyncingFromHub done... $error");
         return $error;
     }
+    /**
+     * sync temperature from hub
+     * @param array $hub the data array for the hub server
+     * @return string error messages if any
+     */
     private static function SyncTemperatureFromHub($hub){
         Services::Log("NullSensors::PullRemoteSensors","SyncTemperatureFromHub");
         if($hub['type'] == "old_hub"){
