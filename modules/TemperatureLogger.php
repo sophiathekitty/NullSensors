@@ -1,5 +1,15 @@
 <?php
+/**
+ * temperature logger handler
+ */
 class TemperatureLogger{
+    /**
+     * record temperature for local sensor. will create new temperature sensor if one doesn't exist
+     * if the sensor isn't new it will see if it's time to create a new log
+     * @param int $gpio the gpio pin for the sensor
+     * @param float $temperature the temperature
+     * @param float $humidity the humidity
+     */
     public static function RecordTemperature($gpio,$temperature,$humidity){
         $sensor = TemperatureSensors::LoadLocalSensor($gpio);
         //print_r($sensor);
@@ -47,12 +57,21 @@ class TemperatureLogger{
         //print_r($sensor);
         TemperatureSensors::SaveSensor($sensor);
     }
+    /**
+     * record an error for a local temperature sensor
+     * @param int $gpio the gpio pin number
+     * @param string $error the error message "ok" for no error
+     */
     public static function RecordError($gpio,$error){
         $sensor = TemperatureSensors::LoadLocalSensor($gpio);
         if(is_null($sensor)) return;
         $sensor['error'] = $error;
         TemperatureSensors::SaveSensor($sensor);
     }
+    /**
+     * a debugging function for seeing if it's time to do a log? 
+     * will break json output because it's a bunch of print_r and echo statements
+     */
     public static function DoLog($sensor){
         print_r($sensor);
         $log = TemperatureLog::LatestLog($sensor['id']);

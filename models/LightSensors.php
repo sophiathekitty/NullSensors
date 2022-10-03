@@ -1,6 +1,8 @@
 <?php
 define('SensorsPlugin',true);
-
+/**
+ * light sensors
+ */
 class LightSensors extends clsModel {
     public $table_name = "LightSensors";
     public $fields = [
@@ -95,6 +97,10 @@ class LightSensors extends clsModel {
         if(is_null(LightSensors::$sensors)) LightSensors::$sensors = new LightSensors();
         return LightSensors::$sensors;
     }
+    /**
+     * load all light sensors
+     * @return array list of light sensors
+     */
     public static function LoadSensors(){
         $sensors = LightSensors::GetInstance();
         return $sensors->LoadAll();

@@ -1,4 +1,10 @@
 <?php
+/**
+ * pulls remote sensor data. if this is the hub it will pull from the devices
+ * otherwise it pulls from the hub.
+ * @todo only TemperatureSensors are synced
+ * @service NullSensors::PullRemoteSensors
+ */
 class PullRemoteSensors {
     /**
      * pull remote sensors from the main hub or the actual devices if this is the main hub

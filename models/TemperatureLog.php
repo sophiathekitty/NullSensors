@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * temperature sensors
+ */
 class TemperatureLog extends clsModel {
     public $table_name = "TemperatureLog";
     public $fields = [
@@ -98,10 +100,20 @@ class TemperatureLog extends clsModel {
         //print_r($data);
         return $sensors->Save($data);
     }
+    /**
+     * get the most recent log
+     * @param int $sensor_id the sensor id
+     * @return array the latest sensor log with $sensor_id
+     */
     public static function LatestLog($sensor_id){
         $sensors = TemperatureLog::GetInstance();
         return $sensors->LoadWhere(["sensor_id"=>$sensor_id],['created'=>"DESC"]);
     }
+    /**
+     * get the logs for a sensor
+     * @param int $senor_id the sensor id
+     * @return array the list of logs for $sensor_id
+     */
     public static function LoadLogs($sensor_id){
         $sensors = TemperatureLog::GetInstance();
         return $sensors->LoadAllWhere(['id'=>$sensor_id]);

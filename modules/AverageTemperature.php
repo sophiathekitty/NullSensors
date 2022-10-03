@@ -1,4 +1,8 @@
 <?php
+/**
+ * calculates the average indoor temperature
+ * @return array ['temp', 'temp_max', 'temp_min', 'hum', 'hum_max', 'hum_min']
+ */
 function AverageIndoorTemperature(){
     $sensors = TemperatureSensors::LoadWorkingSensors();
         

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * motion sensors
+ */
 class MotionSensors extends clsModel {
     public $table_name = "MotionSensors";
     public $fields = [
@@ -80,6 +82,10 @@ class MotionSensors extends clsModel {
         if(is_null(MotionSensors::$sensors)) MotionSensors::$sensors = new MotionSensors();
         return MotionSensors::$sensors;
     }
+    /**
+     * load all motion sensors
+     * @return array list of motion sensors
+     */
     public static function LoadSensors(){
         $sensors = MotionSensors::GetInstance();
         return $sensors->LoadAll();

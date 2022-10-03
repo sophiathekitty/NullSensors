@@ -1,7 +1,20 @@
 <?php
+/**
+ * returns the room temperature for the room this device is in or the average for all rooms
+ * if this device doesn't have a room_id SettingsVar
+ * @return array ['temp', 'temp_max', 'temp_min', 'hum', 'hum_max', 'hum_min']
+ */
 function RoomTemperature(){
-    RoomCurrentTemperature(Settings::LoadSettingsVar('room_id'));
+    $room_id = Settings::LoadSettingsVar('room_id');
+    if(is_null($room_id)) return AverageIndoorTemperature();
+    return RoomCurrentTemperature($room_id);
 }
+/**
+ * returns the room temperature
+ * @depreciated use `RoomDHT11::RoomTemperature($room_id)`
+ * @param int $room_id the room's id
+ * @return array ['temp', 'temp_max', 'temp_min', 'hum', 'hum_max', 'hum_min']
+ */
 function RoomCurrentTemperature($room_id){
     $sensors = TemperatureSensors::LoadRoomSensors($room_id);
     
@@ -31,6 +44,9 @@ function RoomCurrentTemperature($room_id){
         'hum_min' => (float)$hum_min
     ];
 }
+/**
+ * handles the temperature (dht11) sensors for a room
+ */
 class RoomDHT11 {
     /**
      * checks if the room temperature is above a threshold temperature
