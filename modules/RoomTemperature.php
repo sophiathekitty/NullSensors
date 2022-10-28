@@ -6,7 +6,7 @@
  */
 function RoomTemperature(){
     $room_id = Settings::LoadSettingsVar('room_id');
-    if(is_null($room_id)) return AverageIndoorTemperature();
+    if(is_null($room_id) || (int)$room_id == 0) return AverageIndoorTemperature();
     return RoomCurrentTemperature($room_id);
 }
 /**

@@ -201,10 +201,14 @@ class TemperatureSensors extends clsModel {
      * @param int $room_id the room's id
      * @return array list of temperature sensors
      */
-    public static function LoadRoomSensors($room_id){
-        $sensors = TemperatureSensors::GetInstance();
-        return $sensors->LoadAllWhere(['room_id'=>$room_id]);
+    public static function LoadRoomSensors($room_id, $fallback = false){
+        $instance = TemperatureSensors::GetInstance();
+        $sensors = $instance->LoadAllWhere(['room_id'=>$room_id,'error'=>'ok']);
+        if(count($sensors)) return $sensors;
+        if($fallback) return $instance->LoadAllWhere(['room_id'=>$room_id]);
+        return [];
     }
+    
     /**
      * save local sensor data to the database uses id field to identify sensor
      * @notice use `TemperatureSensors::SaveRemoteSensor($data)` for remote sensors
