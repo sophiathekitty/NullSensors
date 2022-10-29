@@ -11,6 +11,7 @@ class TemperatureLogger{
      * @param float $humidity the humidity
      */
     public static function RecordTemperature($gpio,$temperature,$humidity){
+        Services::Start("TemperatureLogger::RecordTemperature");
         $sensor = TemperatureSensors::LoadLocalSensor($gpio);
         //print_r($sensor);
         $new = false;
@@ -18,6 +19,7 @@ class TemperatureLogger{
             // is new
             $new = true;
             $sensor = ['gpio'=>$gpio,'mac_address'=>LocalMac(),'log_delay'=>60];
+            Services::Log("TemperatureLogger::RecordTemperature","new sensor");
         }
         $temperature = round($temperature,1);
         $humidity = round($humidity,1);
@@ -25,6 +27,7 @@ class TemperatureLogger{
         $sensor['modified'] = date("Y-m-d H:i:s");
         $sensor['temp'] = $temperature;
         $sensor['hum'] = $humidity;
+        Services::Log("TemperatureLogger::RecordTemperature",$temperature);
         if($new){
             //echo "new";
             $sensor['hum_max'] = $humidity;
@@ -55,7 +58,9 @@ class TemperatureLogger{
             }
         }
         //print_r($sensor);
-        TemperatureSensors::SaveSensor($sensor);
+        $res = TemperatureSensors::SaveSensor($sensor);
+        Services::Log("TemperatureLogger::RecordTemperature",$res['error']);
+        Services::Complete("TemperatureLogger::RecordTemperature");
     }
     /**
      * record an error for a local temperature sensor
@@ -63,10 +68,14 @@ class TemperatureLogger{
      * @param string $error the error message "ok" for no error
      */
     public static function RecordError($gpio,$error){
+        Services::Start("TemperatureLogger::RecordError");
         $sensor = TemperatureSensors::LoadLocalSensor($gpio);
         if(is_null($sensor)) return;
         $sensor['error'] = $error;
-        TemperatureSensors::SaveSensor($sensor);
+        Services::Log("TemperatureLogger::RecordError",$error);
+        $res = TemperatureSensors::SaveSensor($sensor);
+        Services::Log("TemperatureLogger::RecordError",$res['error']);
+        Services::Complete("TemperatureLogger::RecordError");
     }
     /**
      * a debugging function for seeing if it's time to do a log? 

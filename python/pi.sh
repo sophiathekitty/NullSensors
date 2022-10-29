@@ -11,5 +11,6 @@ while true; do
     python3 /var/www/html/plugins/NullSensors/python/piSensors.py &
     wait $!
     sleep 10
+    echo "restarting"
 done
 exit
