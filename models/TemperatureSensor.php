@@ -177,7 +177,7 @@ class TemperatureSensors extends clsModel {
      */
     public static function LoadWorkingSensors(){
         $sensors = TemperatureSensors::GetInstance();
-        return $sensors->LoadAllWhere(["error"=>"ok"]);
+        return $sensors->LoadFieldAfter('last_ok',date("Y-m-d H:i:s",time()-DaysToSeconds(1)));
     }
     /**
      * load only the local sensors ["mac_address"=>LocalMac()]
@@ -210,7 +210,7 @@ class TemperatureSensors extends clsModel {
      */
     public static function LoadRoomSensors($room_id, $fallback = false){
         $instance = TemperatureSensors::GetInstance();
-        $sensors = $instance->LoadAllWhere(['room_id'=>$room_id,'error'=>'ok']);
+        $sensors = $instance->LoadWhereFieldAfter(['room_id'=>$room_id],'last_ok',date("Y-m-d H:i:s",time()-DaysToSeconds(1)));
         if(count($sensors)) return $sensors;
         if($fallback) return $instance->LoadAllWhere(['room_id'=>$room_id]);
         return [];
@@ -225,7 +225,7 @@ class TemperatureSensors extends clsModel {
     public static function SaveSensor($data){
         $sensors = TemperatureSensors::GetInstance();
         $data = $sensors->CleanData($data);
-        //if($data['error'] == 'ok') $data['last_ok'] = date("Y-m-d H:i:s");
+        if($data['error'] == 'ok') $data['last_ok'] = date("Y-m-d H:i:s");
         if(!isset($data['id']) || is_null($sensors->LoadWhere(['id'=>$data['id']]))){
             return $sensors->Save($data);
         }
@@ -239,7 +239,7 @@ class TemperatureSensors extends clsModel {
     public static function SaveRemoteSensor($data){
         $sensors = TemperatureSensors::GetInstance();
         $data = $sensors->CleanDataSkipId($data);
-        //if($data['error'] == 'ok') $data['last_ok'] = date("Y-m-d H:i:s");
+        if($data['error'] == 'ok') $data['last_ok'] = date("Y-m-d H:i:s");
         $sensor = $sensors->LoadWhere(['remote_id'=>$data['remote_id'],'mac_address'=>$data['mac_address']]);
         if(is_null($sensor)){
             return $sensors->Save($data);
