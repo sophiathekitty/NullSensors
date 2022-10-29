@@ -5,7 +5,16 @@
  */
 function AverageIndoorTemperature(){
     $sensors = TemperatureSensors::LoadWorkingSensors();
-        
+    Debug::Log("AverageIndoorTemperature",$sensors);
+    if(count($sensors) == 0)return [
+        'temp' => 0,
+        'temp_max' => 0,
+        'temp_min' => 0,
+        'hum' => 0,
+        'hum_max' => 0,
+        'hum_min' => 0,
+        'error' => 'no working sensors'
+    ];
     $temp = 0;
     $temp_max = 0;
     $temp_min = 100000;

@@ -16,8 +16,9 @@ function RoomTemperature(){
  * @return array ['temp', 'temp_max', 'temp_min', 'hum', 'hum_max', 'hum_min']
  */
 function RoomCurrentTemperature($room_id){
-    $sensors = TemperatureSensors::LoadRoomSensors($room_id);
-    
+    $sensors = TemperatureSensors::LoadRoomSensors($room_id,true);
+    Debug::Log("RoomCurrentTemp($room_id)",$sensors);
+    if(is_null($sensors) || count($sensors) == 0) return AverageIndoorTemperature();
     $temp = 0;
     $temp_max = 0;
     $temp_min = 100000;
