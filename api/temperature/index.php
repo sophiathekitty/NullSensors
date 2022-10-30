@@ -1,7 +1,6 @@
 <?php
 require_once("../../../../includes/main.php");
 $data = [];
-$data['get'] = $_GET;
 if(isset($_GET['gpio'],$_GET['error'])){
     // report error state
     TemperatureLogger::RecordError($_GET['gpio'],$_GET['error']);

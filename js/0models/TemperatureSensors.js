@@ -2,7 +2,7 @@ class TemperatureSensorCollection extends Collection {
     static instance = new TemperatureSensorCollection();
     static debug_temperature = false;
     constructor(debug = TemperatureSensorCollection.debug_temperature){
-        super("temperature","temperature","/plugins/NullSensors/api/temperature","/plugins/NullSensors/api/temperature");
+        super("temperature","temperature","/plugins/NullSensors/api/temperature?working=1","/plugins/NullSensors/api/temperature");
     }
     /**
      * gets the room sensors
@@ -13,7 +13,7 @@ class TemperatureSensorCollection extends Collection {
         this.getData(json=>{
             var sensors = {'temperature':[]};
             json.temperature.forEach(sensor=>{
-                if(Number(sensor.room_id) == room_id && sensor.error == "ok"){
+                if(Number(sensor.room_id) == room_id){
                     sensors.temperature.push(sensor);
                 }
             });
