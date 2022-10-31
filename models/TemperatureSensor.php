@@ -172,12 +172,25 @@ class TemperatureSensors extends clsModel {
         return $sensors->LoadAll();
     }
     /**
+     * parse out offline sensors
+     * @param array $sensors a list of sensors to check
+     * @return array the list of working sensors
+     */
+    private static function OfflineCheck($sensors){
+        $working = [];
+        foreach($sensors as $sensor){
+            if(strtotime($sensor['modified']) > time()-DaysToSeconds(Settings::LoadSettingsVar('sensor_offline_threshold',1)))
+                $working[] = $sensor;
+        }
+        return $working;
+    }
+    /**
      * load only the working sensors ["error"=>"ok"]
      * @return array list of temperature sensors
      */
     public static function LoadWorkingSensors(){
         $sensors = TemperatureSensors::GetInstance();
-        return $sensors->LoadFieldAfter('last_ok',date("Y-m-d H:i:s",time()-DaysToSeconds(1)));
+        return TemperatureSensors::OfflineCheck($sensors->LoadFieldAfter('last_ok',date("Y-m-d H:i:s",time()-DaysToSeconds(Settings::LoadSettingsVar('sensor_offline_threshold',1)))));
     }
     /**
      * load only the local sensors ["mac_address"=>LocalMac()]
@@ -211,6 +224,7 @@ class TemperatureSensors extends clsModel {
     public static function LoadRoomSensors($room_id, $fallback = false){
         $instance = TemperatureSensors::GetInstance();
         $sensors = $instance->LoadWhereFieldAfter(['room_id'=>$room_id],'last_ok',date("Y-m-d H:i:s",time()-DaysToSeconds(1)));
+        $sensors = TemperatureSensors::OfflineCheck($sensors);
         if(count($sensors)) return $sensors;
         if($fallback) return $instance->LoadAllWhere(['room_id'=>$room_id]);
         return [];
