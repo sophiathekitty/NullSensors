@@ -34,6 +34,13 @@ class TemperatureSensors extends clsModel {
             'Default'=>"0",
             'Extra'=>""
         ],[
+            'Field'=>"garden_id",
+            'Type'=>"int(11)",
+            'Null'=>"NO",
+            'Key'=>"",
+            'Default'=>"0",
+            'Extra'=>""
+        ],[
             'Field'=>"gpio",
             'Type'=>"int(11)",
             'Null'=>"NO",
