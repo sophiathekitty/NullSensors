@@ -19,9 +19,12 @@ class TemperatureChart extends HourlyChart {
     public static function Indoors(){
         $chart = TemperatureChart::GetInstance();
         $data = [];
+        $dataGardens = [];
         for($h = 0; $h < 24; $h++){
-            $data[$h] = $chart->HourlyAverages(TemperatureLog::LoadTemperatureHour($h),$h,["temp","hum"]);
+            $data[$h] = $chart->HourlyAverages(TemperatureLog::LoadInsideTemperatureHour($h),$h,["temp","hum"]);
+            $dataGardens[$h] = $chart->HourlyAverages(TemperatureLog::LoadGardenTemperatureHour($h),$h,["temp","hum"]);
         }
+        return $chart->Merge($data,$dataGardens,["temp","hum"],0.75);
         return $data;
     }
     /**

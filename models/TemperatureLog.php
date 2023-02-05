@@ -20,12 +20,26 @@ class TemperatureLog extends clsModel {
             'Default'=>"",
             'Extra'=>""
         ],[
+            'Field'=>"inside",
+            'Type'=>"tinyint(1)",
+            'Null'=>"NO",
+            'Key'=>"",
+            'Default'=>"1",
+            'Extra'=>""
+        ],[
+            'Field'=>"garden",
+            'Type'=>"tinyint(1)",
+            'Null'=>"NO",
+            'Key'=>"",
+            'Default'=>"0",
+            'Extra'=>""
+        ],[
             'Field'=>"created",
             'Type'=>"datetime",
             'Null'=>"NO",
             'Key'=>"",
             'Default'=>"current_timestamp()",
-            'Extra'=>"on update current_timestamp()"
+            'Extra'=>""
         ],[
             'Field'=>"temp",
             'Type'=>"double",
@@ -96,8 +110,12 @@ class TemperatureLog extends clsModel {
         $log = TemperatureLog::LatestLog($data['sensor_id']);
         if(time() - strtotime($log['created']) < $data['log_delay']) return ["no_log"=>time() - strtotime($log['created'])];
         $sensors->PruneField('created',DaysToSeconds($data['keep_time']));
+        if(isset($data['garden_id']) && (int)$data['garden_id'] != 0) $data['garden'] = 1;
+        if(isset($data['outside']) && (int)$data['outside'] != 0) $data['inside'] = 0;
         $data = $sensors->CleanDataSkipFields($data,['id']);
         //print_r($data);
+        Debug::Log("TemperatureLog::LogSensor",$data);
+        //Services::Log("NullSensors::PullRemoteSensors","SyncTemperatureFromHub::sensor::".$data['sensor_id']." [".$data['inside']."] ".$data['garden']);
         return $sensors->Save($data);
     }
     /**
@@ -126,6 +144,24 @@ class TemperatureLog extends clsModel {
     public static function LoadTemperatureHour($h){
         $sensors = TemperatureLog::GetInstance();
         return $sensors->LoadFieldHour('created',$h);
+    }
+    /**
+     * load inside temperature from hour of day
+     * @param int $h the hour to load
+     * @return array array of temperature data for the specified hour of the day
+     */
+    public static function LoadInsideTemperatureHour($h){
+        $sensors = TemperatureLog::GetInstance();
+        return $sensors->LoadFieldHourWhere("`inside` = '1' AND `garden` = '0'",'created',$h);
+    }
+    /**
+     * load temperature from hour of day
+     * @param int $h the hour to load
+     * @return array array of temperature data for the specified hour of the day
+     */
+    public static function LoadGardenTemperatureHour($h){
+        $sensors = TemperatureLog::GetInstance();
+        return $sensors->LoadFieldHourWhere("`garden` = '1'",'created',$h);
     }
     /**
      * load temperature from hour of day

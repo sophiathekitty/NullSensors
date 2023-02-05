@@ -141,7 +141,8 @@ class PullRemoteSensors {
                 TemperatureSensors::SaveRemoteSensor($temperature);
                 $error .= clsDB::$db_g->get_err();
                 $temperature['sensor_id'] = $temperature['id'];
-                TemperatureLog::LogSensor($temperature);
+                $rep = TemperatureLog::LogSensor($temperature);
+                //if(isset($rep['no_log'])) Services::Log("NullSensors::PullRemoteSensors","SyncTemperatureFromHub::sensor::".$temperature['mac_address']." ".$temperature['name']." no log? ".$rep['no_log']);
             }
         }
         return $error;
