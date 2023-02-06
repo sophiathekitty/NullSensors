@@ -60,7 +60,7 @@ class TemperatureBug extends View {
                 this.pallet.getColorLerp("temp",temp,color=>{
                     $("[room_id="+room_id+"] .sensors [var=temp]").css("color",color);
                 });
-                $("[room_id="+room_id+"] .sensors [var=temp]").attr("title","Temp: "+Math.round(temp)+"° | "+Math.round(max_temp)+"° / "+Math.round(min_temp)+"°\nHum: "+Math.round(hum)+"% | "+Math.round(max_hum)+"% / "+Math.round(min_hum)+"%");
+                $("[room_id="+room_id+"] .sensors [var=temp]").attr("title","Temp: "+(Math.round(temp*10)/10)+"° | "+(Math.round(max_temp*10)/10)+"° / "+(Math.round(min_temp*10)/10)+"°\nHum: "+(Math.round(hum*10)/10)+"% | "+(Math.round(max_hum*10)/10)+"% / "+(Math.round(min_hum*10)/10)+"%");
 
             } else {
                 $("[room_id="+room_id+"] .sensors [var=temp]").attr("unit","e");
