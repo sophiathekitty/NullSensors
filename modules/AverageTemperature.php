@@ -23,7 +23,7 @@ function AverageIndoorTemperature(){
     }
     $indoorAverage = AverageTemperatureSensors($indoorSensors);
     $gardenAverage = AverageTemperatureSensors($gardenSensors);
-    return MergeTemperatures($indoorAverage,$gardenAverage,0.75);
+    return MergeTemperatures($indoorAverage,$gardenAverage,Settings::LoadSettingsVar("IndoorGardenTempRatio",0.75));
 }
 function AverageTemperatureSensors($sensors){
     Debug::Log("AverageTemperatureSensors",$sensors);

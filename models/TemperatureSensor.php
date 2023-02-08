@@ -200,6 +200,14 @@ class TemperatureSensors extends clsModel {
         return TemperatureSensors::OfflineCheck($sensors->LoadFieldAfter('last_ok',date("Y-m-d H:i:s",time()-DaysToSeconds(Settings::LoadSettingsVar('sensor_offline_threshold',1)))));
     }
     /**
+     * load only the working sensors ["error"=>"ok"]
+     * @return array list of temperature sensors
+     */
+    public static function LoadWorkingIndoorSensors(){
+        $sensors = TemperatureSensors::GetInstance();
+        return TemperatureSensors::OfflineCheck($sensors->LoadWhereFieldAfter(['garden_id'=>'0'],'last_ok',date("Y-m-d H:i:s",time()-DaysToSeconds(Settings::LoadSettingsVar('sensor_offline_threshold',1)))));
+    }
+    /**
      * load only the local sensors ["mac_address"=>LocalMac()]
      * @return array list of temperature sensors
      */

@@ -19,6 +19,19 @@ function RoomCurrentTemperature($room_id){
     $sensors = TemperatureSensors::LoadRoomSensors($room_id,true);
     Debug::Log("RoomCurrentTemp($room_id)",$sensors);
     if(is_null($sensors) || count($sensors) == 0) return AverageIndoorTemperature();
+    $indoorSensors = [];
+    $gardenSensors = [];
+    foreach($sensors as $sensor){
+        if($sensor['garden_id'] == 0) $indoorSensors[] = $sensor;
+        else $gardenSensors[] = $sensor;
+    }
+    if(count($indoorSensors) == 0) $indoorSensors = TemperatureSensors::LoadWorkingIndoorSensors();
+    $indoorAverage = AverageTemperatureSensors($indoorSensors);
+    if(count($gardenSensors) == 0) return $indoorAverage;
+    $gardenAverage = AverageTemperatureSensors($gardenSensors);
+    return MergeTemperatures($indoorAverage,$gardenAverage,Settings::LoadSettingsVar("IndoorGardenTempRatio",0.75));
+    
+    /*    
     $temp = 0;
     $temp_max = 0;
     $temp_min = 100000;
@@ -44,6 +57,7 @@ function RoomCurrentTemperature($room_id){
         'hum_max' => (float)$hum_max,
         'hum_min' => (float)$hum_min
     ];
+    */
 }
 /**
  * handles the temperature (dht11) sensors for a room

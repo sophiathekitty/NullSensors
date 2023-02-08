@@ -24,7 +24,7 @@ class TemperatureChart extends HourlyChart {
             $data[$h] = $chart->HourlyAverages(TemperatureLog::LoadInsideTemperatureHour($h),$h,["temp","hum"]);
             $dataGardens[$h] = $chart->HourlyAverages(TemperatureLog::LoadGardenTemperatureHour($h),$h,["temp","hum"]);
         }
-        return $chart->Merge($data,$dataGardens,["temp","hum"],0.75);
+        return $chart->Merge($data,$dataGardens,["temp","hum"],Settings::LoadSettingsVar("IndoorGardenTempRatio",0.75));
         return $data;
     }
     /**
