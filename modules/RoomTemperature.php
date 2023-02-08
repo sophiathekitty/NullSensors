@@ -18,7 +18,7 @@ function RoomTemperature(){
 function RoomCurrentTemperature($room_id){
     $sensors = TemperatureSensors::LoadRoomSensors($room_id,true);
     Debug::Log("RoomCurrentTemp($room_id)",$sensors);
-    if(is_null($sensors) || count($sensors) == 0) return AverageIndoorTemperature();
+    if(is_null($sensors) || count($sensors) == 0) return null;//AverageIndoorTemperature();
     $indoorSensors = [];
     $gardenSensors = [];
     foreach($sensors as $sensor){
@@ -29,7 +29,9 @@ function RoomCurrentTemperature($room_id){
     $indoorAverage = AverageTemperatureSensors($indoorSensors);
     if(count($gardenSensors) == 0) return $indoorAverage;
     $gardenAverage = AverageTemperatureSensors($gardenSensors);
-    return MergeTemperatures($indoorAverage,$gardenAverage,Settings::LoadSettingsVar("IndoorGardenTempRatio",0.75));
+    $average = MergeTemperatures($indoorAverage,$gardenAverage,Settings::LoadSettingsVar("IndoorGardenTempRatioRoom$room_id",0.75));
+    $average['garden'] = $gardenAverage;
+    return $average;
     
     /*    
     $temp = 0;
