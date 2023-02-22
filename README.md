@@ -59,3 +59,5 @@ sudo crontab -e
 ```Apache config
 3 * * * * sh /var/www/html/plugins/NullSensors/gitpull.sh
 ```
+
+* icons made with [open source icons](https://game-icons.net/)
