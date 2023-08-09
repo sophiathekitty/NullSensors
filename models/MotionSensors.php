@@ -66,14 +66,14 @@ class MotionSensors extends clsModel {
             'Type'=>"int(11)",
             'Null'=>"NO",
             'Key'=>"",
-            'Default'=>"",
+            'Default'=>"0",
             'Extra'=>""
         ],[
             'Field'=>"active",
             'Type'=>"int(11)",
             'Null'=>"NO",
             'Key'=>"",
-            'Default'=>"",
+            'Default'=>"1",
             'Extra'=>""
         ]
     ];
@@ -83,12 +83,45 @@ class MotionSensors extends clsModel {
         return MotionSensors::$sensors;
     }
     /**
+     * load the sensor for a pico device
+     * @param string $mac_address the pico's mac address
+     * @return array the sensor data array
+     */
+    public static function LoadLocalPicoSensor($mac_address){
+        $sensors = MotionSensors::GetInstance();
+        return $sensors->LoadAllWhere(["mac_address"=>$mac_address]);
+    }
+
+    /**
      * load all motion sensors
      * @return array list of motion sensors
      */
     public static function LoadSensors(){
         $sensors = MotionSensors::GetInstance();
         return $sensors->LoadAll();
+    }
+    /**
+     * load a sensor by it's id
+     * @param int $id the sensor's id
+     * @return array the sensor data array
+     */
+    public static function LoadSensor($id){
+        $sensors = MotionSensors::GetInstance();
+        return $sensors->LoadWhere(["id"=>$id]);
+    }
+    /**
+     * save remote sensor data to the database uses remote_id and mac_address to identify sensor and ignores id field
+     * @param array $data temperature sensor data array
+     * @return array save report ['last_insert_id'=>$id,'error'=>clsDB::$db_g->get_err(),'sql'=>$sql,'row'=>$row]
+     */
+    public static function SavePicoSensor($data){
+        $sensors = MotionSensors::GetInstance();
+        $data = $sensors->CleanDataSkipId($data);
+        $sensor = $sensors->LoadWhere(['mac_address'=>$data['mac_address'],'remote_id'=>$data['remote_id']]);
+        if(is_null($sensor)){
+            return $sensors->Save($data);
+        }
+        return $sensors->Save($data,['mac_address'=>$data['mac_address'],'remote_id'=>$data['remote_id']]);
     }
 }
 if(defined('VALIDATE_TABLES')){

@@ -59,7 +59,7 @@ class TemperatureSensors extends clsModel {
             'Type'=>"varchar(100)",
             'Null'=>"NO",
             'Key'=>"",
-            'Default'=>"0",
+            'Default'=>"new sensor",
             'Extra'=>""
         ],[
             'Field'=>"log_delay",
@@ -224,6 +224,15 @@ class TemperatureSensors extends clsModel {
         return $sensors->LoadAllWhere(["serial"=>"0","mac_address"=>LocalMac()]);
     }
     /**
+     * load the sensor for a pico device
+     * @param string $mac_address the pico's mac address
+     * @return array the sensor data array
+     */
+    public static function LoadLocalPicoSensor($mac_address){
+        $sensors = TemperatureSensors::GetInstance();
+        return $sensors->LoadAllWhere(["mac_address"=>$mac_address]);
+    }
+    /**
      * load only the local sensors run on a connected arduino `["serial"=>"1","mac_address"=>LocalMac()]`
      * @return array list of temperature sensors
      */
@@ -276,6 +285,21 @@ class TemperatureSensors extends clsModel {
         //print_r($data);
         return $sensors->Save($data,['remote_id'=>$data['remote_id'],'mac_address'=>$data['mac_address']]);
         //print_r($r);
+    }
+    /**
+     * save remote sensor data to the database uses remote_id and mac_address to identify sensor and ignores id field
+     * @param array $data temperature sensor data array
+     * @return array save report ['last_insert_id'=>$id,'error'=>clsDB::$db_g->get_err(),'sql'=>$sql,'row'=>$row]
+     */
+    public static function SavePicoSensor($data){
+        $sensors = TemperatureSensors::GetInstance();
+        $data = $sensors->CleanDataSkipId($data);
+        if($data['error'] == 'ok') $data['last_ok'] = date("Y-m-d H:i:s");
+        $sensor = $sensors->LoadWhere(['mac_address'=>$data['mac_address'],'remote_id'=>$data['remote_id']]);
+        if(is_null($sensor)){
+            return $sensors->Save($data);
+        }
+        return $sensors->Save($data,['mac_address'=>$data['mac_address'],'remote_id'=>$data['remote_id']]);
     }
 }
 if(defined('VALIDATE_TABLES')){

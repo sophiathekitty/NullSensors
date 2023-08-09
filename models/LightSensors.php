@@ -88,7 +88,7 @@ class LightSensors extends clsModel {
             'Type'=>"int(11)",
             'Null'=>"NO",
             'Key'=>"",
-            'Default'=>"",
+            'Default'=>"100",
             'Extra'=>""
         ]
     ];
@@ -98,12 +98,53 @@ class LightSensors extends clsModel {
         return LightSensors::$sensors;
     }
     /**
+     * load the sensor for a pico device
+     * @param string $mac_address the pico's mac address
+     * @return array the sensor data array
+     */
+    public static function LoadLocalPicoSensor($mac_address){
+        $sensors = LightSensors::GetInstance();
+        return $sensors->LoadAllWhere(["mac_address"=>$mac_address]);
+    }
+    /**
+     * load the sensors for a specific room
+     * @param int $room_id the room id
+     * @return array list of sensors
+     */
+    public static function LoadRoomSensors($room_id){
+        $sensors = LightSensors::GetInstance();
+        return $sensors->LoadAllWhere(["room_id"=>$room_id]);
+    }
+    /**
      * load all light sensors
      * @return array list of light sensors
      */
     public static function LoadSensors(){
         $sensors = LightSensors::GetInstance();
         return $sensors->LoadAll();
+    }
+    /**
+     * save remote sensor data to the database uses remote_id and mac_address to identify sensor and ignores id field
+     * @param array $data temperature sensor data array
+     * @return array save report ['last_insert_id'=>$id,'error'=>clsDB::$db_g->get_err(),'sql'=>$sql,'row'=>$row]
+     */
+    public static function SavePicoSensor($data){
+        $sensors = LightSensors::GetInstance();
+        $data = $sensors->CleanDataSkipId($data);
+        $sensor = $sensors->LoadWhere(['mac_address'=>$data['mac_address'],'remote_id'=>$data['remote_id']]);
+        if(is_null($sensor)){
+            return $sensors->Save($data);
+        }
+        return $sensors->Save($data,['mac_address'=>$data['mac_address'],'remote_id'=>$data['remote_id']]);
+    }
+    /**
+     * load a sensor by id
+     * @param int $id the sensor id
+     * @return array the sensor data array
+     */
+    public static function LoadSensor($id){
+        $sensors = LightSensors::GetInstance();
+        return $sensors->LoadWhere(['id'=>$id]);
     }
 }
 if(defined('VALIDATE_TABLES')){
